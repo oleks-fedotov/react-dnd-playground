@@ -1,11 +1,12 @@
 import React from 'react';
 import { DragSource } from 'react-dnd';
+import { withProps } from 'recompose';
 import './style.css';
 
-const DragBox = ({ isDragging, connectDragSource }) =>
+const DragBox = ({ text, isDragging, connectDragSource }) =>
   connectDragSource(
     <div className="drag-me-box" style={{ opacity: isDragging ? 0.6 : 1 }}>
-      drag me
+      {text}
     </div>
   );
 
@@ -14,10 +15,13 @@ const DragBox = ({ isDragging, connectDragSource }) =>
  */
 const dragSourceContract = {
   beginDrag() {
-    console.log(1);
+    console.log('drag start');
     return {
       isDragging: true
     };
+  },
+  endDrag() {
+    console.log('drag end');
   }
 };
 
@@ -33,4 +37,8 @@ function collect(connect, monitor) {
 
 DragBox.propTypes = {};
 
-export default DragSource('drag-box', dragSourceContract, collect)(DragBox);
+const DragBoxWithText = withProps({ text: 'Drag Me' })(DragBox);
+
+export default DragSource('drag-box', dragSourceContract, collect)(
+  DragBoxWithText
+);

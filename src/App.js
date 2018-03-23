@@ -4,10 +4,6 @@ import DragNDropArea from './components/DragNDropArea';
 
 import './App.css';
 
-const App = () => (
-  <div className="App">
-    <DragNDropArea />
-  </div>
-);
+const App = () => <DragNDropArea />;
 
 export default App;
