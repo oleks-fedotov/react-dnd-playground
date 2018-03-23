@@ -18,11 +18,13 @@ const dropTargetSpec = {
     console.log('monitor.getItem()', monitor.getItem());
     return true;
   },
-  drop(props, monitor, component) {
+  drop(props, monitor, ...rest) {
     console.log('drop');
+    console.log(rest);
+    debugger;
     return {
-      children: component
-    };
+    	result: true
+		};
   },
   hover(props) {
     console.log('hover');
