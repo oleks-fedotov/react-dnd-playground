@@ -9,17 +9,21 @@ import Task from './components/Task';
 import InitHtml5DragDropContext from './decorators/InitHtml5DragDropContext';
 
 import './App.css';
+import DraggableTask from './decorators/DraggableTask';
+import DroppableColumn from './decorators/DroppableColumn';
 
 const App = () => (
   <div className="boards-container">
     {columns.map(({ title, value }) => {
       const DragDropColumn = InitHtml5DragDropContext(
         toClass(
-          withProps({
-            title,
-            tasks: _.filter(tasks, { status: value }),
-            TaskComponent: Task
-          })(TasksColumn)
+          DroppableColumn(
+            withProps({
+              title,
+              tasks: _.filter(tasks, { status: value }),
+              RenderTask: taskProps => DraggableTask(withProps(taskProps)(Task))
+            })(TasksColumn)
+          )
         )
       );
 

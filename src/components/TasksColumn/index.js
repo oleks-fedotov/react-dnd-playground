@@ -1,8 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withProps } from 'recompose';
-
-import DraggableTask from './../../decorators/draggableTask';
 
 import './style.css';
 
@@ -10,12 +7,12 @@ const TasksColumn = ({
   title: columnTitle,
   tasks,
   columnBackground,
-  TaskComponent
+  RenderTask
 }) => (
   <div className="tasks-column" style={{ backgroundColor: columnBackground }}>
     <h2 className="title">{columnTitle}</h2>
     {tasks.map(taskProps => {
-      const Task = DraggableTask(withProps(taskProps)(TaskComponent));
+      const Task = RenderTask(taskProps);
       return <Task key={taskProps.id} />;
     })}
   </div>
@@ -30,7 +27,7 @@ TasksColumn.propTypes = {
   title: PropTypes.string.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({ title: PropTypes.string })),
   columnBackground: PropTypes.string,
-  TaskComponent: PropTypes.oneOfType([
+  RenderTask: PropTypes.oneOfType([
     PropTypes.func.isRequired,
     PropTypes.node.isRequired,
     PropTypes.element.isRequired
