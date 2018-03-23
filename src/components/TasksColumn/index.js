@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withProps } from 'recompose';
 
+import DraggableTask from './../../decorators/draggableTask';
+
 import './style.css';
 
 const TasksColumn = ({
@@ -13,7 +15,7 @@ const TasksColumn = ({
   <div className="tasks-column" style={{ backgroundColor: columnBackground }}>
     <h2 className="title">{columnTitle}</h2>
     {tasks.map(taskProps => {
-      const Task = withProps(taskProps)(TaskComponent);
+      const Task = DraggableTask(withProps(taskProps)(TaskComponent));
       return <Task key={taskProps.id} />;
     })}
   </div>
@@ -32,7 +34,7 @@ TasksColumn.propTypes = {
     PropTypes.func.isRequired,
     PropTypes.node.isRequired,
     PropTypes.element.isRequired
-  ])
+  ]).isRequired
 };
 
 export default TasksColumn;
