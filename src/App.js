@@ -5,6 +5,7 @@ import { withProps, toClass } from 'recompose';
 import { columns, tasks } from './config/tasks';
 
 import TasksColumn from './components/TasksColumn';
+import Task from './components/Task';
 import InitHtml5DragDropContext from './decorators/InitHtml5DragDropContext';
 
 import './App.css';
@@ -16,7 +17,8 @@ const App = () => (
         toClass(
           withProps({
             title,
-            tasks: _.filter(tasks, { status: value })
+            tasks: _.filter(tasks, { status: value }),
+            TaskComponent: Task
           })(TasksColumn)
         )
       );
