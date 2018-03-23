@@ -1,6 +1,7 @@
 .tasks-column {
     width: 300px;
     margin: 50px 10px;
+    padding: 5px;
 }
 
 .title {
@@ -8,5 +9,4 @@
     color: white;
     background-color: darkslategray;
     padding: 10px;
-    margin: 5px;
 }
