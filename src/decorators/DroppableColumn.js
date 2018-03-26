@@ -1,9 +1,6 @@
 import React from 'react';
 import { DropTarget } from 'react-dnd';
 
-const MakeDroppable = ComponentToWrap => ({ connectDropTarget }) =>
-  connectDropTarget(<div><ComponentToWrap /></div>);
-
 const allowedTypes = ['task'];
 
 function collect(connect, monitor) {
@@ -13,25 +10,20 @@ function collect(connect, monitor) {
 }
 
 const dropTargetSpec = {
-  canDrop: (props, monitor) => {
-    console.log('can drop');
-    console.log('monitor.getItem()', monitor.getItem());
-    return true;
-  },
-  drop(props, monitor, ...rest) {
-    console.log('drop');
-    console.log(rest);
-    debugger;
+  drop(props, monitor) {
+    const {dropHandler} = monitor.getItem();
+
+    dropHandler();
     return {
-    	result: true
-		};
+      result: true
+    };
   },
   hover(props) {
     console.log('hover');
   }
 };
 
-export default ComponentToWrap =>
-  DropTarget(allowedTypes, dropTargetSpec, collect)(
-    MakeDroppable(ComponentToWrap)
+export default componentToWrap =>
+  DropTarget(allowedTypes, dropTargetSpec, collect)(({ connectDropTarget }) =>
+    connectDropTarget(<div>{componentToWrap}</div>)
   );

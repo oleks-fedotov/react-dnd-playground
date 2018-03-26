@@ -7,14 +7,11 @@ const TasksColumn = ({
   title: columnTitle,
   tasks,
   columnBackground,
-  RenderTask
+  renderTask
 }) => (
   <div className="tasks-column" style={{ backgroundColor: columnBackground }}>
     <h2 className="title">{columnTitle}</h2>
-    {tasks.map(taskProps => {
-      const Task = RenderTask(taskProps);
-      return <Task key={taskProps.id} />;
-    })}
+    {tasks.map(renderTask)}
   </div>
 );
 
@@ -27,7 +24,7 @@ TasksColumn.propTypes = {
   title: PropTypes.string.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({ title: PropTypes.string })),
   columnBackground: PropTypes.string,
-  RenderTask: PropTypes.oneOfType([
+  renderTask: PropTypes.oneOfType([
     PropTypes.func.isRequired,
     PropTypes.node.isRequired,
     PropTypes.element.isRequired

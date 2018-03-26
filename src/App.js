@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { withProps, toClass } from 'recompose';
+import { toClass } from 'recompose';
 
 import { columns, tasks } from './config/tasks';
 
@@ -18,11 +18,14 @@ const App = () => (
       const DragDropColumn = InitHtml5DragDropContext(
         toClass(
           DroppableColumn(
-            withProps({
-              title,
-              tasks: _.filter(tasks, { status: value }),
-              RenderTask: taskProps => DraggableTask(withProps(taskProps)(Task))
-            })(TasksColumn)
+            <TasksColumn
+              title={title}
+              tasks={_.filter(tasks, { status: value })}
+              renderTask={taskProps => {
+                const DragTask = DraggableTask(Task);
+                return <DragTask key={taskProps.id} {...taskProps} />;
+              }}
+            />
           )
         )
       );

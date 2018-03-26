@@ -1,22 +1,14 @@
 import React from 'react';
 import { DragSource } from 'react-dnd';
 
-const MakeDraggable = ComponentToWrap => ({ connectDragSource }) =>
-  connectDragSource(
-    <div>
-      <ComponentToWrap />
-    </div>
-  );
-
 /**
  * Implements the drag source contract.
  */
 const dragSourceContract = {
-  beginDrag(props, monitor) {
-    console.log(props);
-
+  beginDrag(props) {
     return {
       isDragging: true,
+      dropHandler: props.dropHandler,
       ...props
     };
   },
@@ -40,5 +32,10 @@ function collect(connect, monitor) {
 
 export default ComponentToWrap =>
   DragSource('task', dragSourceContract, collect)(
-    MakeDraggable(ComponentToWrap)
+    ({ connectDragSource, ...props }) =>
+      connectDragSource(
+        <div>
+          <ComponentToWrap {...props} />
+        </div>
+      )
   );
