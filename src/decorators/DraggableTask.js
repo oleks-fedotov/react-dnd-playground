@@ -8,7 +8,6 @@ const dragSourceContract = {
   beginDrag(props) {
     return {
       isDragging: true,
-      dropHandler: props.dropHandler,
       ...props
     };
   },

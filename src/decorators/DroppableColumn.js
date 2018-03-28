@@ -11,15 +11,9 @@ function collect(connect, monitor) {
 
 const dropTargetSpec = {
   drop(props, monitor) {
-    const {dropHandler} = monitor.getItem();
-
-    dropHandler();
-    return {
-      result: true
-    };
-  },
-  hover(props) {
-    console.log('hover');
+    const task = monitor.getItem();
+    const { onTaskDropped } = props;
+    onTaskDropped(task);
   }
 };
 
