@@ -5,3 +5,9 @@
     border: white 1px solid;
     margin-top: 5px;
 }
+
+.placeholder {
+    background: transparent;
+    border: 1px dashed white;
+    opacity: 0.5;
+}

@@ -6,15 +6,13 @@ import { DragSource } from 'react-dnd';
  */
 const dragSourceContract = {
   beginDrag(props) {
+    if (props.beginDrag) {
+      props.beginDrag(props.model);
+    }
+
     return {
-      isDragging: true,
-      ...props
-    };
-  },
-  endDrag() {
-    console.log('drag end');
-    return {
-      task: 1
+      ...props.model,
+      isDragging: true
     };
   }
 };
@@ -31,10 +29,10 @@ function collect(connect, monitor) {
 
 export default ComponentToWrap =>
   DragSource('task', dragSourceContract, collect)(
-    ({ connectDragSource, ...props }) =>
+    ({ connectDragSource, model, ...restProps }) =>
       connectDragSource(
         <div>
-          <ComponentToWrap {...props} />
+          <ComponentToWrap model={model} {...restProps} />
         </div>
       )
   );

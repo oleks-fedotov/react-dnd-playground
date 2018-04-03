@@ -13,7 +13,7 @@ const dropTargetSpec = {
   drop(props, monitor) {
     const task = monitor.getItem();
     const { onTaskDropped } = props;
-    onTaskDropped(task);
+    return onTaskDropped(task);
   }
 };
 

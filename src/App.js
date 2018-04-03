@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import _ from 'lodash';
 import {toClass} from 'recompose';
+import _ from 'lodash';
 
 import {columns, tasks} from './config/tasks';
 
@@ -11,30 +11,56 @@ import InitHtml5DragDropContext from './decorators/InitHtml5DragDropContext';
 import './App.css';
 import DraggableTask from './decorators/DraggableTask';
 import DroppableColumn from './decorators/DroppableColumn';
+import HoverableTask from './decorators/HoverableTask';
+import {assignIndexToTasks, getReorderedTasks, getTasksForColumn, updateTaskIn} from './utils/tasksProcessor';
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			tasks: tasks,
+			tasks: assignIndexToTasks(tasks),
 			columns: columns
 		};
 	}
 
+	onTaskDropped = (task) => {
+		this.setState(({tasks}) => ({
+				tasks: assignIndexToTasks(updateTaskIn(tasks, task, {isDragging: false}))
+			})
+		);
+	};
+
+	onTaskDragStarted = (task) => {
+
+		setTimeout(() => {
+			this.setState(({tasks}) => ({
+				tasks: updateTaskIn(tasks, task, {isDragging: true})
+			}));
+		}, 1);
+
+	};
+
+	onTaskHovered = (hoveredTask) => (draggedTask) => {
+
+		if (hoveredTask.id === draggedTask.id || !draggedTask.isDragging) {
+			return;
+		}
+
+		this.setState(({tasks}) => ({tasks: getReorderedTasks(tasks, hoveredTask, draggedTask)}));
+	};
+
 	onTaskDroppedInColumn = (column) => (task) => {
-		const updatedTasks = this.state.tasks.map(oldTask => {
-			return oldTask.id === task.id
-				? {
-					...oldTask,
-					status: column
-				}
-				: oldTask;
-		});
+		const taskUpdatedProps = {
+			isDragging: false,
+			status: column
+		};
+
+		const updatedTasks = assignIndexToTasks(updateTaskIn(this.state.tasks, task, taskUpdatedProps));
 
 		this.setState({
 			tasks: updatedTasks
-		})
+		});
 	};
 
 	render() {
@@ -49,12 +75,15 @@ class App extends Component {
 							DroppableColumn(
 								<TasksColumn
 									title={title}
-									tasks={_.filter(tasks, {status: value})}
-									renderTask={taskProps => {
-										const DragTask = DraggableTask(Task);
-										return <DragTask
-											key={taskProps.id}
-											{...taskProps}
+									tasks={getTasksForColumn(tasks, value)}
+									renderTask={task => {
+										const HoverDragTask = DraggableTask(HoverableTask(Task));
+										return <HoverDragTask
+											key={task.id}
+											model={task}
+											beginDrag={this.onTaskDragStarted}
+											drop={this.onTaskDropped}
+											hover={_.throttle(this.onTaskHovered(task), 100)}
 										/>;
 									}}
 								/>
