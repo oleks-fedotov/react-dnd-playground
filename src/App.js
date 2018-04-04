@@ -69,6 +69,17 @@ class App extends Component {
 		});
 	};
 
+	onTaskHoverColumn = (column) => (task) => {
+		this.setState(({tasks}) => {
+			const lastTaskState = _.find(tasks, {id: task.id});
+			return lastTaskState.status === column
+				? null
+				: {
+					tasks: assignIndexToTasks(updateTaskIn(tasks, lastTaskState, {status: column, index: 0}))
+				};
+		});
+	};
+
 	render() {
 
 		const {tasks, columns} = this.state;
@@ -100,6 +111,7 @@ class App extends Component {
 					return <DragDropColumn
 						key={value}
 						onTaskDropped={this.onTaskDroppedInColumn(value)}
+						onTaskHover={this.onTaskHoverColumn(value)}
 					/>;
 				})}
 			</div>

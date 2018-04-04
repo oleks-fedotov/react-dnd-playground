@@ -14,6 +14,11 @@ const dropTargetSpec = {
     const task = monitor.getItem();
     const { onTaskDropped } = props;
     return onTaskDropped(task);
+  },
+  hover(props, monitor) {
+    const task = monitor.getItem();
+    const {onTaskHover} = props;
+    return onTaskHover && onTaskHover(task);
   }
 };
 
