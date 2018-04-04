@@ -12,7 +12,10 @@ import './App.css';
 import DraggableTask from './decorators/DraggableTask';
 import DroppableColumn from './decorators/DroppableColumn';
 import HoverableTask from './decorators/HoverableTask';
-import {assignIndexToTasks, getReorderedTasks, getTasksForColumn, updateTaskIn} from './utils/tasksProcessor';
+import {
+	assignIndexToTasks, getReorderedTasks, getTasksForColumn, orderTaskByIndex,
+	updateTaskIn
+} from './utils/tasksProcessor';
 
 class App extends Component {
 	constructor(props) {
@@ -47,7 +50,10 @@ class App extends Component {
 			return;
 		}
 
-		this.setState(({tasks}) => ({tasks: getReorderedTasks(tasks, hoveredTask, draggedTask)}));
+		this.setState(({tasks}) => {
+			const draggedUpdatedTask = _.find(tasks, {id: draggedTask.id});
+			return {tasks: getReorderedTasks(tasks, hoveredTask, draggedUpdatedTask)};
+		});
 	};
 
 	onTaskDroppedInColumn = (column) => (task) => {
@@ -75,7 +81,7 @@ class App extends Component {
 							DroppableColumn(
 								<TasksColumn
 									title={title}
-									tasks={getTasksForColumn(tasks, value)}
+									tasks={orderTaskByIndex(getTasksForColumn(tasks, value))}
 									renderTask={task => {
 										const HoverDragTask = DraggableTask(HoverableTask(Task));
 										return <HoverDragTask

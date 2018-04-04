@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const assignIndexToTasks = tasks =>
   tasks.map((task, index) => ({ ...task, index }));
 
@@ -9,11 +11,12 @@ export const getReorderedTasks = (tasks, hoveredTask, draggedTask) => {
     reorderedTasks: resultTasks,
     isDraggedTaskAdded: isResultComplete
   } = tasks.reduce(
-    ({ reorderedTasks, isDraggedTaskAdded }, task) => {
+    ({ reorderedTasks, isDraggedTaskAdded, lastIndex }, task) => {
       if (task.id === draggedTask.id) {
         return {
           reorderedTasks,
-          isDraggedTaskAdded
+          isDraggedTaskAdded,
+          lastIndex
         };
       }
 
@@ -23,12 +26,13 @@ export const getReorderedTasks = (tasks, hoveredTask, draggedTask) => {
             ...reorderedTasks,
             {
               ...draggedTask,
-              index: hoveredTask.index,
-              status: hoveredTask.status
+              status: hoveredTask.status,
+              index: lastIndex + 1
             },
-            { ...hoveredTask, index: draggedTask.index }
+            { ...hoveredTask, index: lastIndex + 2 }
           ],
-          isDraggedTaskAdded: true
+          isDraggedTaskAdded: true,
+          lastIndex: lastIndex + 2
         };
       }
 
@@ -36,25 +40,28 @@ export const getReorderedTasks = (tasks, hoveredTask, draggedTask) => {
         return {
           reorderedTasks: [
             ...reorderedTasks,
-            { ...hoveredTask, index: draggedTask.index },
+            { ...hoveredTask, index: lastIndex + 1 },
             {
               ...draggedTask,
-              index: hoveredTask.index,
-              status: hoveredTask.status
+              status: hoveredTask.status,
+              index: lastIndex + 2
             }
           ],
-          isDraggedTaskAdded: true
+          isDraggedTaskAdded: true,
+          lastIndex: lastIndex + 2
         };
       }
 
       return {
         isDraggedTaskAdded,
-        reorderedTasks: [...reorderedTasks, task]
+        reorderedTasks: [...reorderedTasks, { ...task, index: lastIndex + 1 }],
+        lastIndex: lastIndex + 1
       };
     },
     {
       reorderedTasks: [],
-      isDraggedTaskAdded: false
+      isDraggedTaskAdded: false,
+      lastIndex: -1
     }
   );
 
@@ -70,6 +77,8 @@ export const getReorderedTasks = (tasks, hoveredTask, draggedTask) => {
 
 export const getTasksForColumn = (tasks, column) =>
   tasks.filter(({ status }) => status === column);
+
+export const orderTaskByIndex = tasks => _.sortBy(tasks, 'index');
 
 export const updateTaskIn = (tasks, task, newProps) =>
   tasks.map(
