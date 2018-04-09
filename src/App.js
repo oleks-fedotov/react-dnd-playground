@@ -16,6 +16,7 @@ import {
 	assignIndexToTasks, getReorderedTasks, getTasksForColumn, orderTaskByIndex,
 	updateTaskIn
 } from './utils/tasksProcessor';
+import AnimatedMovingTask from './decorators/AnimatedMovingUpDownTask';
 
 class App extends Component {
 	constructor(props) {
@@ -46,13 +47,23 @@ class App extends Component {
 
 	onTaskHovered = (hoveredTask) => (draggedTask) => {
 
-		if (hoveredTask.id === draggedTask.id || !draggedTask.isDragging) {
+		if (
+			hoveredTask.id === draggedTask.id || !draggedTask.isDragging ||
+			(this.state.animatedTask && this.state.animatedTask.id === hoveredTask.id)
+		) {
 			return;
 		}
 
 		this.setState(({tasks}) => {
 			const draggedUpdatedTask = _.find(tasks, {id: draggedTask.id});
-			return {tasks: getReorderedTasks(tasks, hoveredTask, draggedUpdatedTask)};
+			const {reorderedTasks, hoveredTaskMoveDirection} = getReorderedTasks(tasks, hoveredTask, draggedUpdatedTask);
+			return {
+				tasks: reorderedTasks,
+				animatedTask: {
+					id: hoveredTask.id,
+					animationDirection: hoveredTaskMoveDirection
+				}
+			};
 		});
 	};
 
@@ -65,7 +76,8 @@ class App extends Component {
 		const updatedTasks = assignIndexToTasks(updateTaskIn(this.state.tasks, task, taskUpdatedProps));
 
 		this.setState({
-			tasks: updatedTasks
+			tasks: updatedTasks,
+			animatedTask: null
 		});
 	};
 
@@ -80,9 +92,15 @@ class App extends Component {
 		});
 	};
 
+	movingAnimationPlayed = () => {
+		this.setState({animatedTask: null});
+	};
+
 	render() {
 
 		const {tasks, columns} = this.state;
+
+		console.log(this.state.animatedTask);
 
 		return (
 			<div className="boards-container">
@@ -95,13 +113,23 @@ class App extends Component {
 									tasks={orderTaskByIndex(getTasksForColumn(tasks, value))}
 									renderTask={task => {
 										const HoverDragTask = DraggableTask(HoverableTask(Task));
-										return <HoverDragTask
+										const taskToRender = <HoverDragTask
 											key={task.id}
 											model={task}
 											beginDrag={this.onTaskDragStarted}
 											drop={this.onTaskDropped}
 											hover={_.throttle(this.onTaskHovered(task), 100)}
 										/>;
+										return this.state.animatedTask && task.id === this.state.animatedTask.id ?
+											<AnimatedMovingTask
+												key={task.id}
+												isMovingUp={this.state.animatedTask.animationDirection === 'up'}
+												isMovingDown={this.state.animatedTask.animationDirection === 'down'}
+												animationPlayed={this.movingAnimationPlayed}
+											>
+												{taskToRender}
+											</AnimatedMovingTask>
+											: taskToRender;
 									}}
 								/>
 							)

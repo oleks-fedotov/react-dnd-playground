@@ -1,0 +1,10 @@
+.animated.moving-down {
+    animation: 0.15s linear 0s 1 moving-down-by-1-height;
+}
+
+.animated.moving-up {
+    animation: 0.15s linear 0s 1 moving-up-by-1-height;
+}
+
+@keyframes moving-up-by-1-height { from { transform: translateY(100%); } to { transform: translateY(0); }  }
+@keyframes moving-down-by-1-height { from { transform: translateY(-100%); } to { transform: translateY(0); }  }

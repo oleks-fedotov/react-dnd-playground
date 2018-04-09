@@ -72,7 +72,18 @@ export const getReorderedTasks = (tasks, hoveredTask, draggedTask) => {
     ];
   }
 
-  return resultTasks;
+  let hoveredTaskMoveDirection = '';
+
+  if (isTaskDraggedOverEarlierTasks) {
+    hoveredTaskMoveDirection = 'down';
+  } else if (isTaskDraggedOverLaterTasks) {
+    hoveredTaskMoveDirection = 'up';
+  }
+
+  return {
+    reorderedTasks: resultTasks,
+    hoveredTaskMoveDirection
+  };
 };
 
 export const getTasksForColumn = (tasks, column) =>

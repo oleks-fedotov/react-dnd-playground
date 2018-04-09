@@ -24,7 +24,7 @@ describe('getReorderedTasks', () => {
       }
     ];
 
-    const reorderedTasks = getReorderedTasks(tasks, tasks[1], tasks[0]);
+    const { reorderedTasks } = getReorderedTasks(tasks, tasks[1], tasks[0]);
 
     const expectedReorderedTasks = [
       { ...tasks[1], index: 0 },
@@ -57,7 +57,7 @@ describe('getReorderedTasks', () => {
       }
     ];
 
-    const reorderedTasks = getReorderedTasks(tasks, tasks[0], tasks[1]);
+    const { reorderedTasks } = getReorderedTasks(tasks, tasks[0], tasks[1]);
 
     const expectedReorderedTasks = [
       { ...tasks[1], index: 0 },
@@ -90,7 +90,7 @@ describe('getReorderedTasks', () => {
       }
     ];
 
-    const reorderedTasks = getReorderedTasks(tasks, tasks[2], tasks[1]);
+    const { reorderedTasks } = getReorderedTasks(tasks, tasks[2], tasks[1]);
 
     const expectedReorderedTasks = [
       tasks[0],
@@ -123,7 +123,7 @@ describe('getReorderedTasks', () => {
       }
     ];
 
-    const reorderedTasks = getReorderedTasks(tasks, tasks[1], tasks[2]);
+    const { reorderedTasks } = getReorderedTasks(tasks, tasks[1], tasks[2]);
 
     const expectedReorderedTasks = [
       tasks[0],
@@ -156,8 +156,12 @@ describe('getReorderedTasks', () => {
       }
     ];
 
-    const reorderedTasks1 = getReorderedTasks(tasks, tasks[1], tasks[0]);
-    const reorderedTasks2 = getReorderedTasks(
+    const { reorderedTasks: reorderedTasks1 } = getReorderedTasks(
+      tasks,
+      tasks[1],
+      tasks[0]
+    );
+    const { reorderedTasks: reorderedTasks2 } = getReorderedTasks(
       reorderedTasks1,
       _.find(reorderedTasks1, { id: 3 }),
       _.find(reorderedTasks1, { id: 1 })
@@ -194,8 +198,12 @@ describe('getReorderedTasks', () => {
       }
     ];
 
-    const reorderedTasks1 = getReorderedTasks(tasks, tasks[1], tasks[2]);
-    const reorderedTasks2 = getReorderedTasks(
+    const { reorderedTasks: reorderedTasks1 } = getReorderedTasks(
+      tasks,
+      tasks[1],
+      tasks[2]
+    );
+    const { reorderedTasks: reorderedTasks2 } = getReorderedTasks(
       reorderedTasks1,
       _.find(reorderedTasks1, { id: 1 }),
       _.find(reorderedTasks1, { id: 3 })
@@ -232,8 +240,12 @@ describe('getReorderedTasks', () => {
       }
     ];
 
-    const reorderedTasks1 = getReorderedTasks(tasks, tasks[2], tasks[1]);
-    const reorderedTasks2 = getReorderedTasks(
+    const { reorderedTasks: reorderedTasks1 } = getReorderedTasks(
+      tasks,
+      tasks[2],
+      tasks[1]
+    );
+    const { reorderedTasks: reorderedTasks2 } = getReorderedTasks(
       reorderedTasks1,
       _.find(reorderedTasks1, { id: 3 }),
       _.find(reorderedTasks1, { id: 2 })
